@@ -1,7 +1,11 @@
 import { z } from "zod";
 
+import { AI_TOOLS } from "@/types/spend";
+
 export const spendEntrySchema = z.object({
-  tool: z.string().min(1, "Tool is required"),
+  tool: z.enum(AI_TOOLS, {
+    message: "Please select a valid tool",
+  }),
 
   plan: z
     .string()
@@ -9,31 +13,27 @@ export const spendEntrySchema = z.object({
     .max(50),
 
   monthlySpend: z
-    .number({
-      invalid_type_error: "Monthly spend must be a number",
-    })
-    .min(0),
+    .number()
+    .min(0, "Monthly spend must be positive"),
 
   seats: z
-    .number({
-      invalid_type_error: "Seats must be a number",
-    })
+    .number()
     .int()
-    .min(1),
+    .min(1, "Seats must be at least 1"),
 
   teamSize: z
-    .number({
-      invalid_type_error: "Team size must be a number",
-    })
+    .number()
     .int()
-    .min(1),
+    .min(1, "Team size must be at least 1"),
 
   primaryUseCase: z
     .string()
-    .min(3)
+    .min(3, "Use case is too short")
     .max(120),
 });
 
 export const spendFormSchema = z.object({
-  entries: z.array(spendEntrySchema).min(1),
+  entries: z
+    .array(spendEntrySchema)
+    .min(1, "Add at least one tool"),
 });
