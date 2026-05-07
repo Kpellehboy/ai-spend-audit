@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  background-color: white;
+  background: white;
   color: #0f172a;
-  font-feature-settings: "rlig" 1, "calt" 1;
+  font-family: Arial, Helvetica, sans-serif;
 }
