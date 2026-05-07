@@ -6,7 +6,7 @@ export default function DashboardPage() {
           Dashboard
         </h1>
 
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-gray-500">
           AI spend insights will appear here.
         </p>
       </div>
