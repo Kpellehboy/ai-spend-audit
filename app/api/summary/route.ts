@@ -23,10 +23,7 @@ export async function POST(req: Request) {
     );
 
     return NextResponse.json({
-      summary:
-        typeof summary === "string"
-          ? summary
-          : summary.text,
+      summary,
     });
   } catch (error) {
     console.error(error);

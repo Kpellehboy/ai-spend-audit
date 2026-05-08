@@ -49,5 +49,10 @@ ${findings
       ],
     });
 
-  return response.content[0];
+  const textContent = response.content
+    .filter((block) => block.type === "text")
+    .map((block) => block.text)
+    .join("\n");
+
+  return textContent;
 }
