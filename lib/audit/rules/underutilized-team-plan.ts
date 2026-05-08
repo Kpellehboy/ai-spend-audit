@@ -11,7 +11,8 @@ export const underutilizedTeamPlanRule: AuditRule = {
         entry.plan.toLowerCase().includes("team") ||
         entry.plan.toLowerCase().includes("business");
 
-      const lowSeatUsage = entry.seats <= 2;
+      const lowSeatUsage =
+        entry.seats === 1;
 
       if (!isTeamPlan || !lowSeatUsage) {
         return [];
@@ -30,7 +31,7 @@ export const underutilizedTeamPlanRule: AuditRule = {
           description: `${entry.tool} is using a team-tier plan with only ${entry.seats} seats.`,
 
           recommendation:
-            "Consider downgrading to individual plans unless advanced admin controls are required.",
+            "Consider evaluating whether multiple coding assistants are required across the same workflows. Consolidating tooling may reduce recurring costs and simplify onboarding.",
 
           estimatedMonthlySavings:
             entry.monthlySpend * 0.35,
