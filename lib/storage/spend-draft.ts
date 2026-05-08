@@ -32,3 +32,12 @@ export function loadSpendDraft():
     return null;
   }
 }
+
+export function clearSpendDraft() {
+  if (typeof window === "undefined")
+    return;
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+}

@@ -1,20 +1,28 @@
-import { SpendFormValues } from "@/types/spend";
+import type { SpendFormValues } from "@/schemas/spend";
 
-const STORAGE_KEY = "ai-spend-audit-form";
+const STORAGE_KEY =
+  "ai-spend-audit-form";
 
-export function saveSpendForm(data: SpendFormValues) {
-  if (typeof window === "undefined") return;
+export function saveSpendData(
+  values: SpendFormValues
+) {
+  if (typeof window === "undefined")
+    return;
 
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(data)
+    JSON.stringify(values)
   );
 }
 
-export function loadSpendForm(): SpendFormValues | null {
-  if (typeof window === "undefined") return null;
+export function loadSpendData():
+  | SpendFormValues
+  | null {
+  if (typeof window === "undefined")
+    return null;
 
-  const raw = localStorage.getItem(STORAGE_KEY);
+  const raw =
+    localStorage.getItem(STORAGE_KEY);
 
   if (!raw) return null;
 
@@ -25,8 +33,11 @@ export function loadSpendForm(): SpendFormValues | null {
   }
 }
 
-export function clearSpendForm() {
-  if (typeof window === "undefined") return;
+export function clearSpendData() {
+  if (typeof window === "undefined")
+    return;
 
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
 }

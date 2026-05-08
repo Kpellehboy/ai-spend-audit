@@ -9,9 +9,10 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { SpendFormValues } from "@/schemas/spend";
-
-import { spendFormSchema } from "@/schemas/spend";
+import {
+  spendFormSchema,
+  type SpendFormValues,
+} from "@/schemas/spend";
 
 import {
   loadSpendDraft,
@@ -28,14 +29,15 @@ interface Props {
   ) => void | Promise<void>;
 }
 
-const DEFAULT_ENTRY = {
-  tool: "Cursor" as const,
-  plan: "",
-  monthlySpend: 20,
-  seats: 1,
-  teamSize: 1,
-  primaryUseCase: "",
-};
+const DEFAULT_ENTRY: SpendFormValues["entries"][0] =
+  {
+    tool: "Cursor",
+    plan: "",
+    monthlySpend: 20,
+    seats: 1,
+    teamSize: 1,
+    primaryUseCase: "",
+  };
 
 export function SpendForm({
   onSubmit,
@@ -45,17 +47,14 @@ export function SpendForm({
 
   const form =
     useForm<SpendFormValues>({
-      resolver: zodResolver(
-        spendFormSchema
-      ),
+      resolver:
+        zodResolver(spendFormSchema),
 
       defaultValues: {
         entries: [DEFAULT_ENTRY],
       },
 
       mode: "onChange",
-
-      reValidateMode: "onChange",
     });
 
   const {
@@ -66,8 +65,6 @@ export function SpendForm({
     reset,
     formState,
   } = form;
-
-  const { isValid } = formState;
 
   const { fields, append, remove } =
     useFieldArray({
@@ -95,17 +92,9 @@ export function SpendForm({
     try {
       setIsSubmitting(true);
 
-      console.log(
-        "VALID FORM:",
-        values
-      );
-
       await onSubmit(values);
     } catch (error) {
-      console.error(
-        "SUBMIT ERROR:",
-        error
-      );
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -114,41 +103,22 @@ export function SpendForm({
   return (
     <form
       onSubmit={handleSubmit(
-        handleFormSubmit,
-        (errors) => {
-          console.log(
-            "FORM ERRORS:",
-            errors
-          );
-        }
+        handleFormSubmit
       )}
       className="space-y-6 rounded-3xl border bg-card p-6 shadow-sm"
     >
-      {/* HEADER */}
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">
           AI Spend Inputs
         </h2>
 
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Add your AI tool subscriptions and
-          usage details to identify redundant
-          spend, unused seats, and optimization
-          opportunities.
+        <p className="mt-2 text-sm text-muted-foreground">
+          Add your AI subscriptions and usage
+          information to identify redundant
+          spend and optimization opportunities.
         </p>
       </div>
 
-      {/* GLOBAL FORM ERROR */}
-      {!isValid && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-          <p className="text-sm text-red-600">
-            Please complete all required fields
-            before analyzing spend.
-          </p>
-        </div>
-      )}
-
-      {/* FORM ENTRIES */}
       <div className="space-y-4">
         {fields.map((field, index) => (
           <SpendEntryRow
@@ -164,12 +134,10 @@ export function SpendForm({
         ))}
       </div>
 
-      {/* ACTIONS */}
-      <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <Button
           type="button"
           variant="outline"
-          className="h-10"
           onClick={() =>
             append(DEFAULT_ENTRY)
           }
@@ -179,10 +147,7 @@ export function SpendForm({
 
         <Button
           type="submit"
-          disabled={
-            isSubmitting || !isValid
-          }
-          className="h-10 min-w-[160px] bg-foreground text-background shadow-sm hover:opacity-90"
+          disabled={isSubmitting}
         >
           {isSubmitting
             ? "Analyzing..."

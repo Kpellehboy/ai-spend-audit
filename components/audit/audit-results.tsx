@@ -1,5 +1,6 @@
 import { AuditFinding } from "@/types/audit";
 
+
 import {
   calculateAnnualSavings,
   calculateMonthlySavings,
@@ -15,7 +16,7 @@ interface Props {
   findings: AuditFinding[];
 }
 
-export function AuditResults({
+export async function AuditResults({
   findings,
 }: Props) {
   const monthlySavings =
@@ -23,6 +24,9 @@ export function AuditResults({
 
   const annualSavings =
     calculateAnnualSavings(monthlySavings);
+
+  const hasLargeSavings =
+    monthlySavings > 500;
 
   return (
     <section className="space-y-8">
@@ -46,7 +50,7 @@ export function AuditResults({
         </div>
       )}
 
-      {monthlySavings > 500 && (
+      {hasLargeSavings && (
         <CredexCTA
           monthlySavings={monthlySavings}
         />

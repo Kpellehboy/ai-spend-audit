@@ -9,7 +9,7 @@
 /build
 
 # environment variables
-.env.local
+.env
 .env.*.local
 
 # logs

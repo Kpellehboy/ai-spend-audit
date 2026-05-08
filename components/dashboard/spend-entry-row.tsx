@@ -9,7 +9,7 @@ import type {
 
 import type { SpendFormValues } from "@/schemas/spend";
 
-import { AI_TOOLS } from "@/schemas/spend";
+import { AI_TOOLS } from "@/types/spend";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,7 +89,9 @@ export function SpendEntryRow({
 
           {entryErrors?.tool && (
             <p className="text-sm text-red-500">
-              {entryErrors.tool.message}
+              {String(
+                entryErrors.tool.message
+              )}
             </p>
           )}
         </div>
@@ -109,7 +111,9 @@ export function SpendEntryRow({
 
           {entryErrors?.plan && (
             <p className="text-sm text-red-500">
-              {entryErrors.plan.message}
+              {String(
+                entryErrors.plan.message
+              )}
             </p>
           )}
         </div>
@@ -133,10 +137,10 @@ export function SpendEntryRow({
 
           {entryErrors?.monthlySpend && (
             <p className="text-sm text-red-500">
-              {
+              {String(
                 entryErrors.monthlySpend
                   .message
-              }
+              )}
             </p>
           )}
         </div>
@@ -160,7 +164,9 @@ export function SpendEntryRow({
 
           {entryErrors?.seats && (
             <p className="text-sm text-red-500">
-              {entryErrors.seats.message}
+              {String(
+                entryErrors.seats.message
+              )}
             </p>
           )}
         </div>
@@ -184,7 +190,9 @@ export function SpendEntryRow({
 
           {entryErrors?.teamSize && (
             <p className="text-sm text-red-500">
-              {entryErrors.teamSize.message}
+              {String(
+                entryErrors.teamSize.message
+              )}
             </p>
           )}
         </div>
@@ -204,10 +212,10 @@ export function SpendEntryRow({
 
           {entryErrors?.primaryUseCase && (
             <p className="text-sm text-red-500">
-              {
+              {String(
                 entryErrors
                   .primaryUseCase.message
-              }
+              )}
             </p>
           )}
         </div>

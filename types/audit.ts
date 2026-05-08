@@ -1,4 +1,4 @@
-import { SpendEntry } from "./spend";
+import type { SpendFormValues } from "@/schemas/spend";
 
 export type AuditSeverity =
   | "low"
@@ -31,7 +31,7 @@ export interface AuditFinding {
 }
 
 export interface AuditContext {
-  entries: SpendEntry[];
+  entries: SpendFormValues["entries"];
 }
 
 export interface AuditRule {
