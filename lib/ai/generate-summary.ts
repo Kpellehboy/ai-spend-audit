@@ -3,27 +3,30 @@ import Anthropic from "@anthropic-ai/sdk";
 import { AuditFinding } from "@/types/audit";
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export async function generateSummary(
+function buildPrompt(
   findings: AuditFinding[],
   monthlySavings: number
 ) {
-  const prompt = `
-You are an AI finance operations assistant.
+  return `
+You are an AI finance operations assistant helping engineering managers review AI tooling costs.
 
-Write a concise executive summary (~100 words).
+Write a concise executive summary in approximately 100 words.
 
-Requirements:
-- Professional tone
-- Helpful but not alarmist
-- Mention likely optimization areas
+Guidelines:
+- Professional and calm tone
+- Helpful and realistic
+- Avoid hype or exaggerated claims
+- Mention likely optimization opportunities
 - Mention estimated savings
-- Avoid exaggeration
-- Avoid bullet points
+- Do not use bullet points
+- Do not invent numbers
+- Do not mention tools that were not provided
+- Sound like a thoughtful operations analyst
 
-Monthly savings estimate:
+Estimated monthly savings:
 $${monthlySavings}
 
 Audit findings:
@@ -34,25 +37,69 @@ ${findings
   )
   .join("\n")}
 `;
+}
 
-  const response =
-    await anthropic.messages.create({
-      model: "claude-3-5-sonnet-latest",
+export async function generateSummary(
+  findings: AuditFinding[],
+  monthlySavings: number
+) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    throw new Error(
+      "Missing ANTHROPIC_API_KEY"
+    );
+  }
 
-      max_tokens: 250,
+  if (findings.length === 0) {
+    return `
+Your current AI tooling spend appears relatively balanced based on the submitted data. While there may be smaller opportunities for optimization, no major overspending patterns or significant operational inefficiencies were identified during this audit.
+`;
+  }
 
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
+  const prompt = buildPrompt(
+    findings,
+    monthlySavings
+  );
 
-  const textContent = response.content
-    .filter((block) => block.type === "text")
-    .map((block) => block.text)
-    .join("\n");
+  try {
+    const response =
+      await anthropic.messages.create({
+        model: "claude-3-5-sonnet-latest",
 
-  return textContent;
+        max_tokens: 250,
+
+        temperature: 0.4,
+
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+    const textContent =
+      response.content
+        .filter(
+          (block) =>
+            block.type === "text"
+        )
+        .map((block) => block.text)
+        .join("\n")
+        .trim();
+
+    if (!textContent) {
+      throw new Error(
+        "Empty summary response"
+      );
+    }
+
+    return textContent;
+  } catch (error) {
+    console.error(
+      "Anthropic summary generation failed:",
+      error
+    );
+
+    throw error;
+  }
 }

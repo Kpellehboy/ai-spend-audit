@@ -1,6 +1,5 @@
 import { AuditFinding } from "@/types/audit";
 
-
 import {
   calculateAnnualSavings,
   calculateMonthlySavings,
@@ -11,12 +10,13 @@ import { RecommendationCard } from "./recommendation-card";
 import { CredexCTA } from "./credex-cta";
 import { EmptySavingsState } from "./empty-savings-state";
 import { AISummaryCard } from "./ai-summary-card";
+import { SaveReportButton } from "./save-report-button";
 
 interface Props {
   findings: AuditFinding[];
 }
 
-export async function AuditResults({
+export function AuditResults({
   findings,
 }: Props) {
   const monthlySavings =
@@ -55,6 +55,15 @@ export async function AuditResults({
           monthlySavings={monthlySavings}
         />
       )}
+
+      <div className="border-t pt-6">
+        <SaveReportButton
+          findings={findings}
+          aiSummary="AI-generated summary placeholder"
+          totalMonthlySavings={monthlySavings}
+          totalAnnualSavings={annualSavings}
+        />
+      </div>
     </section>
   );
 }
